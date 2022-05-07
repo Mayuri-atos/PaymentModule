@@ -1,0 +1,107 @@
+payment controller
+************************
+
+package eCommerce.controller;
+
+import org.springframework.beans.factory.annotation.autowired;
+import org.springframework.stereotype.controller;
+
+import eCommerce.DAO.CartDAO;
+import eCommerce.DAO.OrderDAO;
+import eCommerce.DAO.ProductDAO;
+import eCommerce.DAO.UserDAO;
+
+@controller
+
+public class PaymentController {
+
+@Autowired
+CartDAO cartDAO;
+
+@Autowired
+OrderDAO orderDAO;
+
+@Autowired
+ProductDAO productDAO;
+
+@Autowired
+UserDAO userDAO;
+
+@RequestMapping("/checkout")
+public String checkout(Model m,Httpsession session)
+
+{
+	string username=(String) session.getAttribute("username");
+	List<CartItem> CartItemList=cartDAO.listCartItems(username);
+
+	m.addAttribute("CartItemList", CartItemList);
+	m.addAttribute("grandTotal", this.GetGrandTotal(cartItemList));
+
+	UserDetail userDetail=userDAO.getUser(username);
+
+	String address=userDetail.getCustomerAddr();
+	m.addAttribute("addr",address);
+
+	return("order confirm");
+
+}
+  	@RequestMapping(value="/UpdateAddr",method=RequestMethod.POST)
+	public String UpdateAddr(@RequestParam("addr")String addr, Model m , Httpsession Session)
+{
+
+	String username=(String) session.getAttribute("username");
+	List<CartItem> cartItemList=cartDAO.listCartItems(username);
+
+	m.addAttribute("cartItemList",cartItemList);
+	m.addAtrribute("grandTotal", this.getGrandTotal(cartItemList));
+
+	Userdetail userdetail=userDAO.getUser(userName);
+
+	String address =userDetail.getCustomerAddr();
+	m.addAttribute("addr", address);
+
+	return "OrderConfirm";
+}
+	@Requestmapping(value="/UpdateAddr", method=RequestMethod.POST)
+	public String UpdateAddr(@RequestParam("addr") String addr,Model m,HttpSession session)
+
+	  {
+
+	     String username=(String) session.getAttribute("username");
+	     List<CartItem> cartItemList=cartDAO.cartListItems(username);
+
+	     m.addrAttribute("CartItemList" cartItemList);
+	     m.addAttribute("grandTotal" , this.getGrandTotal(cartItemList));
+
+	    UserDetail userdetail1=userDAO.getUser(username);
+	    userdetail.SetCustomerAddr(addr);
+	    userDAO.updateUser(userdetail);
+
+	  String address=userdetail.getCustomerAddr();
+ 	
+	  m.addAttribute("addr" , address);
+	  return "OrderConfirm";
+
+
+	  }
+
+	public int getGrandTotal(List<CartItem> cartList)
+         {
+	  int grandTotal=0, count=0;
+	  while(count<cartList.size())
+	  {
+	      grandTotal=grandTotal+(cartList.get(count).getQuantity()*cartList.get(count).getPrice());
+	      count++;
+	  }
+	  return grandTotal;
+}
+
+
+
+
+
+
+
+
+
+
